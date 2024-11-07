@@ -5,7 +5,11 @@ const emailRoutes = require('./routes/emailRoutes');
 const cors = require('cors');
 const app = express();
 
-
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/data', dataRoutes);
