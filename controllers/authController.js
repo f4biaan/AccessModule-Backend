@@ -42,11 +42,8 @@ exports.login = async (req, res) => {
   // Generar el token JWT
   const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-  // Generar un secreto para 2FA usando speakeasy
-  const secret = speakeasy.generateSecret({ length: 20 }).base32;
-
   // Enviar el token y el secreto
-  res.json({ message: 'Login successful', token, secret });
+  res.json({ message: 'Login successful', token });
 };
 
 // Generar OTP para 2FA
@@ -56,6 +53,14 @@ exports.generate2FA = (req, res) => {
 
   // Guardar el secreto en la base de datos si es necesario
   res.json({ token, secret: secret.base32 });
+};
+
+// function only generate the token
+exports.generate2FA_only = () => {
+  const secret = speakeasy.generateSecret({ length: 20 });
+  const token = speakeasy.totp({ secret: secret.base32, encoding: 'base32', step: 180 });
+
+  return { token, secret: secret.base32 };
 };
 
 // Verificar OTP
