@@ -1,6 +1,21 @@
 const bcrypt = require('bcrypt');
 const pool = require('../config/db');
 
+const getUsers = async () => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT u.id, u.name, u.email, r.id as roleId , r.name as roleName
+       FROM users u
+       JOIN user_roles ur ON u.id = ur.user_id
+       JOIN roles r ON ur.role_id = r.id`
+    );
+    return rows;
+  } catch (err) {
+    console.error('Error al buscar los usuarios:', err.stack || err);
+    throw err;
+  }
+};
+
 // Función para encontrar un usuario por correo electrónico
 const findUserByEmail = async (email) => {
   try {
@@ -148,4 +163,4 @@ const getUserRoleFunctions = async (userId) => {
   }
 }
 
-module.exports = { findUserByEmail, createUser, getUserRoles, findUserById, addUserRol, deleteUserRol, getUserRoleFunctions };
+module.exports = { findUserByEmail, createUser, getUserRoles, findUserById, addUserRol, deleteUserRol, getUserRoleFunctions, getUsers };

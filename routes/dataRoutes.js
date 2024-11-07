@@ -1,7 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { getUserRoles, getUser, addUserRol, deleteUserRol, getFunctionsByUser } = require('../controllers/userController');
+const { getUserRoles, getUser, getUsers, addUserRol, deleteUserRol, getFunctionsByUser } = require('../controllers/userController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
+
+router.get('/users', authenticateToken, async (req, res) => {
+  try {
+    const users = await getUsers();
+    res.send(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 
 router.get('/user', authenticateToken, async (req, res) => {
   try {

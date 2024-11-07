@@ -1,5 +1,9 @@
 const User = require('../models/userModel');
 
+exports.getUsers = async (req, res) => {
+  const users = await User.getUsers();
+  res.send(users);
+}
 
 exports.getUser = async (userId) => {
   const user = await User.findUserById(userId);
