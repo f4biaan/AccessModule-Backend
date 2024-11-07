@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
   }
 
   const roles = await getUserRoles(user.id);
-  if (!roles.some((role) => role.name === 'Rol Usuario')) {
+  if (!roles.some((role) => role.id === 'ROL_U')) {
     return res.status(403).json({ message: 'Access denied: Insufficient role' });
   }
 
