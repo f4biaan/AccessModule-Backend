@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 
 exports.getUsers = async (req, res) => {
   const users = await User.getUsers();
-  res.send(users);
+  return users;
 }
 
 exports.getUser = async (userId) => {

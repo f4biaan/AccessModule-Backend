@@ -4,17 +4,42 @@ const pool = require('../config/db');
 const getUsers = async () => {
   try {
     const { rows } = await pool.query(
-      `SELECT u.id, u.name, u.email, r.id as roleId , r.name as roleName
+      `SELECT u.id, u.name, u.email, r.id as roleId, r.name as roleName
        FROM users u
        JOIN user_roles ur ON u.id = ur.user_id
        JOIN roles r ON ur.role_id = r.id`
     );
-    return rows;
+
+    // Agrupar usuarios por ID y sus roles en un array
+    const usersMap = {};
+
+    rows.forEach((row) => {
+      // Si el usuario ya existe en el mapa, solo agregamos el nuevo rol
+      if (!usersMap[row.id]) {
+        usersMap[row.id] = {
+          id: row.id,
+          name: row.name,
+          email: row.email,
+          roles: [],
+        };
+      }
+      // Agregar el rol al usuario
+      usersMap[row.id].roles.push({
+        roleId: row.roleid,
+        roleName: row.rolename,
+      });
+    });
+
+    // Convertir el mapa en un array para devolverlo
+    const users = Object.values(usersMap);
+    return users;
+
   } catch (err) {
-    console.error('Error al buscar los usuarios:', err.stack || err);
+    console.error('Server error:', err.message);  // Logs detailed error
     throw err;
   }
 };
+
 
 // Función para encontrar un usuario por correo electrónico
 const findUserByEmail = async (email) => {
