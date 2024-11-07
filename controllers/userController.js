@@ -11,6 +11,11 @@ exports.getUserRoles = async (userId) => {
   return userRoles;
 }
 
+exports.getFunctionsByUser = async (user) => {
+  const functions = await User.getUserRoleFunctions(user);
+  return functions;
+}
+
 exports.addUserRol = async (req, res) => {
   const { user, role } = req.body;
   const userRol = await User.addUserRol(user, role);

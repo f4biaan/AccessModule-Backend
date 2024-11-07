@@ -132,7 +132,7 @@ const deleteUserRol = async (user, role) => {
 const getUserRoleFunctions = async (userId) => {
   try {
     const { rows } = await pool.query(
-      `SELECT f.name, f.description
+      `SELECT f.id as FunctionId, f.name as FunctionName, f.description as FunctionDescription, r.id as RolId, r.name as RolName
       FROM users u
       JOIN user_roles ur ON u.id = ur.user_id
       JOIN roles r ON ur.role_id = r.id
@@ -148,4 +148,4 @@ const getUserRoleFunctions = async (userId) => {
   }
 }
 
-module.exports = { findUserByEmail, createUser, getUserRoles, findUserById, addUserRol, deleteUserRol };
+module.exports = { findUserByEmail, createUser, getUserRoles, findUserById, addUserRol, deleteUserRol, getUserRoleFunctions };
