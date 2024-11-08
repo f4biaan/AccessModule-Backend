@@ -30,19 +30,25 @@ router.get('/user', authenticateToken, async (req, res) => {
 
 router.get('/userdata', async (req, res) => {
   try {
-    const user = req.query.user; // Obtener el user Id desde la query string
+    const user = req.query.user; // Obtener el email del usuario desde la query string
     if (!user) {
       return res.status(400).send('El usuario no es válido');
     }
 
     const userData = await findUserByEmail(user);
+    
+    if (!userData) {
+      return res.status(404).send('Usuario no encontrado');
+    }
+
     res.send({ id: userData.id, name: userData.name });
     
-    
   } catch (err) {
-    res.status(500).send(err);
+    console.error('Error en /userdata:', err); // Log de error para depuración
+    res.status(500).send('Error interno del servidor');
   }
 });
+
 
 router.get('/getroles', authenticateToken, async (req, res) => {
   try {
