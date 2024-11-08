@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getUserRoles, getUser, getUsers, addUserRol, deleteUserRol, getFunctionsByUser } = require('../controllers/userController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
+const { findUserByEmail } = require('../models/userModel');
 
 router.get('/users', authenticateToken, async (req, res) => {
   try {
@@ -22,6 +23,22 @@ router.get('/user', authenticateToken, async (req, res) => {
 
     const user = await getUser(userId);
     res.send(user);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.get('/userdata', authenticateToken, async (req, res) => {
+  try {
+    const user = req.query.user; // Obtener el user Id desde la query string
+    if (!user) {
+      return res.status(400).send('El usuario no es válido');
+    }
+
+    const userData = await findUserByEmail(user);
+    res.send({ id: userData.id, name: userData.name });
+    
+    
   } catch (err) {
     res.status(500).send(err);
   }
