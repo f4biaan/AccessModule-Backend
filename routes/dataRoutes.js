@@ -28,7 +28,7 @@ router.get('/user', authenticateToken, async (req, res) => {
   }
 });
 
-router.get('/userdata', authenticateToken, async (req, res) => {
+router.get('/userdata', async (req, res) => {
   try {
     const user = req.query.user; // Obtener el user Id desde la query string
     if (!user) {
